@@ -49,6 +49,38 @@ export function useDeleteOrden() {
   })
 }
 
+export function useCompras() {
+  return useQuery({ queryKey: ['compras'], queryFn: api.fetchCompras })
+}
+
+export function useCompra(id) {
+  return useQuery({ queryKey: ['compra', id], queryFn: () => api.fetchCompra(id), enabled: !!id })
+}
+
+export function useCreateCompra() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: api.createCompra,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['compras'] }),
+  })
+}
+
+export function useUpdateCompra() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, data }) => api.updateCompra(id, data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['compras'] }),
+  })
+}
+
+export function useDeleteCompra() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: api.deleteCompra,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['compras'] }),
+  })
+}
+
 export function useDashboardStats() {
   return useQuery({ queryKey: ['dashboardStats'], queryFn: api.fetchDashboardStats })
 }

@@ -4,6 +4,7 @@ import Dashboard from '../pages/Dashboard'
 import WorkOrders from '../pages/WorkOrders'
 import WorkOrderForm from '../pages/WorkOrderForm'
 import WorkOrderDetail from '../pages/WorkOrderDetail'
+import Purchases from '../pages/Purchases'
 import EquipmentList from '../pages/EquipmentList'
 import EquipmentDetail from '../pages/EquipmentDetail'
 import Technicians from '../pages/Technicians'
@@ -19,6 +20,7 @@ export default function AppRouter() {
           <Route path="/ordenes" element={<WorkOrders />} />
           <Route path="/ordenes/nueva" element={<WorkOrderForm />} />
           <Route path="/ordenes/:id" element={<WorkOrderDetail />} />
+          <Route path="/compras" element={<Purchases />} />
           <Route path="/equipos" element={<EquipmentList />} />
           <Route path="/equipos/:id" element={<EquipmentDetail />} />
           <Route path="/tecnicos" element={<Technicians />} />

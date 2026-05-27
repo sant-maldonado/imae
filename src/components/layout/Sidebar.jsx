@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 const links = [
   { to: '/', label: 'Dashboard', icon: '📊' },
   { to: '/ordenes', label: 'Órdenes', icon: '📋' },
+  { to: '/compras', label: 'Compras', icon: '🛒' },
   { to: '/equipos', label: 'Equipos', icon: '⚙️' },
   { to: '/tecnicos', label: 'Técnicos', icon: '👷' },
   { to: '/calendario', label: 'Calendario', icon: '📅' },
@@ -25,8 +26,8 @@ export default function Sidebar() {
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-blue-600 text-white'
-                  : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                  ? 'bg-blue-800 text-white'
+                  : 'text-slate-300 hover:bg-blue-900/50 hover:text-white'
               }`
             }
           >

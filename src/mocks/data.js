@@ -59,3 +59,20 @@ export const tiposMantenimiento = {
   correctivo: 'Correctivo',
   predictivo: 'Predictivo',
 }
+
+export const compras = [
+  { id: 1, proveedor: 'Repuestos Industriales SA', articulo: 'Rodamientos SKF 6205', cantidad: 10, unidad: 'unidades', precioUnitario: 450, fechaSolicitud: '2026-05-20', fechaEntrega: '2026-05-28', estado: 'recibido', ordenId: 8 },
+  { id: 2, proveedor: 'Hidráulica del Sur', articulo: 'Aceite hidráulico ISO 46', cantidad: 20, unidad: 'litros', precioUnitario: 180, fechaSolicitud: '2026-05-18', fechaEntrega: '2026-05-22', estado: 'recibido', ordenId: 1 },
+  { id: 3, proveedor: 'Eléctrica Central', articulo: 'Cable THW 10 AWG', cantidad: 100, unidad: 'metros', precioUnitario: 35, fechaSolicitud: '2026-05-22', fechaEntrega: '2026-06-05', estado: 'pendiente', ordenId: 2 },
+  { id: 4, proveedor: 'Filtros Industriales', articulo: 'Filtro de aire comprimido', cantidad: 4, unidad: 'unidades', precioUnitario: 1200, fechaSolicitud: '2026-05-15', fechaEntrega: '2026-05-19', estado: 'recibido', ordenId: 5 },
+  { id: 5, proveedor: 'SensorTech', articulo: 'Sensor de temperatura PT100', cantidad: 3, unidad: 'unidades', precioUnitario: 850, fechaSolicitud: '2026-05-21', fechaEntrega: null, estado: 'pendiente', ordenId: 6 },
+  { id: 6, proveedor: 'Aceros del Norte', articulo: 'Plancha de acero 3/8"', cantidad: 2, unidad: 'planchas', precioUnitario: 3200, fechaSolicitud: '2026-05-23', fechaEntrega: '2026-05-30', estado: 'en_curso', ordenId: null },
+  { id: 7, proveedor: 'Herramientas Pro', articulo: 'Juego de llaves allen', cantidad: 5, unidad: 'juegos', precioUnitario: 280, fechaSolicitud: '2026-05-24', fechaEntrega: null, estado: 'pendiente', ordenId: null },
+  { id: 8, proveedor: 'Lubricantes Premium', articulo: 'Grasa multipropósito', cantidad: 10, unidad: 'kgs', precioUnitario: 150, fechaSolicitud: '2026-05-10', fechaEntrega: '2026-05-14', estado: 'recibido', ordenId: null },
+]
+
+export const estadosCompra = {
+  pendiente: 'Pendiente',
+  en_curso: 'En Curso',
+  recibido: 'Recibido',
+}

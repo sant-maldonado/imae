@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 const titles = {
   '/': 'Dashboard',
   '/ordenes': 'Órdenes de Trabajo',
+  '/compras': 'Compras',
   '/equipos': 'Equipos',
   '/tecnicos': 'Técnicos',
   '/calendario': 'Calendario',

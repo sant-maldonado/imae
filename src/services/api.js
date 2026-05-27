@@ -1,4 +1,4 @@
-import { equipos, tecnicos, ordenes } from '../mocks/data'
+import { equipos, tecnicos, ordenes, compras } from '../mocks/data'
 
 const delay = (ms) => new Promise((r) => setTimeout(r, ms))
 
@@ -59,6 +59,42 @@ export async function deleteOrden(id) {
   const idx = ordenes.findIndex((o) => o.id === Number(id))
   if (idx === -1) throw new Error('Orden no encontrada')
   ordenes.splice(idx, 1)
+  return true
+}
+
+export async function fetchCompras() {
+  await delay(300)
+  return [...compras]
+}
+
+export async function fetchCompra(id) {
+  await delay(200)
+  const compra = compras.find((c) => c.id === Number(id))
+  if (!compra) throw new Error('Compra no encontrada')
+  return { ...compra }
+}
+
+export async function createCompra(data) {
+  await delay(400)
+  const newId = Math.max(...compras.map((c) => c.id)) + 1
+  const compra = { id: newId, ...data, fechaSolicitud: new Date().toISOString().split('T')[0] }
+  compras.unshift(compra)
+  return compra
+}
+
+export async function updateCompra(id, data) {
+  await delay(400)
+  const idx = compras.findIndex((c) => c.id === Number(id))
+  if (idx === -1) throw new Error('Compra no encontrada')
+  compras[idx] = { ...compras[idx], ...data }
+  return compras[idx]
+}
+
+export async function deleteCompra(id) {
+  await delay(300)
+  const idx = compras.findIndex((c) => c.id === Number(id))
+  if (idx === -1) throw new Error('Compra no encontrada')
+  compras.splice(idx, 1)
   return true
 }
 

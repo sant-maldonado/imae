@@ -1,0 +1,76 @@
+import { useState } from 'react'
+import { useCompras } from '../hooks/useMockData'
+import { estadosCompra } from '../mocks/data'
+
+const statusColors = {
+  pendiente: 'bg-amber-50 text-amber-700 border-amber-200',
+  en_curso: 'bg-blue-50 text-blue-700 border-blue-200',
+  recibido: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+}
+
+export default function Purchases() {
+  const { data: compras, isLoading } = useCompras()
+  const [filtroEstado, setFiltroEstado] = useState('')
+
+  if (isLoading) return <div className="text-slate-500">Cargando compras...</div>
+
+  const filtradas = compras.filter((c) => {
+    if (filtroEstado && c.estado !== filtroEstado) return false
+    return true
+  })
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        <select
+          value={filtroEstado}
+          onChange={(e) => setFiltroEstado(e.target.value)}
+          className="text-sm border border-slate-300 rounded-lg px-3 py-2 bg-white text-slate-700"
+        >
+          <option value="">Todos los estados</option>
+          {Object.entries(estadosCompra).map(([k, v]) => (
+            <option key={k} value={k}>{v}</option>
+          ))}
+        </select>
+      </div>
+
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-slate-50 border-b border-slate-200">
+              <th className="text-left px-4 py-3 font-medium text-slate-600">ID</th>
+              <th className="text-left px-4 py-3 font-medium text-slate-600">Artículo</th>
+              <th className="text-left px-4 py-3 font-medium text-slate-600">Proveedor</th>
+              <th className="text-left px-4 py-3 font-medium text-slate-600">Cantidad</th>
+              <th className="text-left px-4 py-3 font-medium text-slate-600">Precio Unit.</th>
+              <th className="text-left px-4 py-3 font-medium text-slate-600">Solicitud</th>
+              <th className="text-left px-4 py-3 font-medium text-slate-600">Entrega</th>
+              <th className="text-left px-4 py-3 font-medium text-slate-600">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtradas.map((compra) => (
+              <tr key={compra.id} className="border-b border-slate-100 hover:bg-slate-50">
+                <td className="px-4 py-3 text-slate-500">#{compra.id}</td>
+                <td className="px-4 py-3 font-medium text-slate-800">{compra.articulo}</td>
+                <td className="px-4 py-3 text-slate-600">{compra.proveedor}</td>
+                <td className="px-4 py-3 text-slate-600">{compra.cantidad} {compra.unidad}</td>
+                <td className="px-4 py-3 text-slate-600">${compra.precioUnitario.toLocaleString()}</td>
+                <td className="px-4 py-3 text-slate-500">{compra.fechaSolicitud}</td>
+                <td className="px-4 py-3 text-slate-500">{compra.fechaEntrega || '-'}</td>
+                <td className="px-4 py-3">
+                  <span className={`inline-block text-xs font-medium px-2.5 py-1 rounded-full border ${statusColors[compra.estado]}`}>
+                    {estadosCompra[compra.estado]}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {filtradas.length === 0 && (
+          <p className="text-center text-slate-400 py-8">No se encontraron compras</p>
+        )}
+      </div>
+    </div>
+  )
+}
