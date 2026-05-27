@@ -202,11 +202,20 @@ INSERT INTO public.ordenes (equipoId, tecnicoId, titulo, descripcion, prioridad,
 (4, 7, 'Cambio filtros compresor', 'Reemplazar filtros de aire y aceite.', 'media', 'completada', '2026-05-18', '2026-05-19', 'correctivo'),
 (10, 1, 'Reparación esmeril angular', 'Reemplazar rodamientos del eje principal.', 'urgente', 'pendiente', '2026-05-25', '2026-05-27', 'correctivo'),
 (12, 7, 'Inspección grúa puente', 'Revisión trimestral de cables y frenos.', 'media', 'pendiente', '2026-05-26', '2026-06-05', 'preventivo'),
-(8, 4, 'Mantenimiento HVAC', 'Limpieza de conductos y revisión de compresor.', 'baja', 'completada', '2026-05-10', '2026-05-12', 'preventivo');
+(8, 4, 'Mantenimiento HVAC', 'Limpieza de conductos y revisión de compresor.', 'baja', 'completada', '2026-05-10', '2026-05-12', 'preventivo'),
+(2, 2, 'Revisión eléctrica de fresadora', 'Verificar conexiones eléctricas y tablero de control.', 'media', 'en_progreso', '2026-05-18', '2026-05-22', 'correctivo'),
+(4, 2, 'Cambio de filtros de aire', 'Reemplazar filtros de aire del compresor industrial.', 'baja', 'pendiente', '2026-05-15', '2026-05-30', 'preventivo'),
+(7, 6, 'Reemplazo de rodamientos', 'Cambiar rodamientos desgastados de la cinta transportadora.', 'alta', 'completada', '2026-05-19', '2026-05-21', 'correctivo'),
+(11, 5, 'Cambio de molde', 'Reemplazar molde de la inyectora de plástico.', 'media', 'en_progreso', '2026-05-20', '2026-05-25', 'preventivo'),
+(9, 7, 'Lubricación general', 'Lubricación de ejes y engranajes del taladro radial.', 'baja', 'pendiente', '2026-05-22', '2026-06-01', 'preventivo');
 
 INSERT INTO public.compras (proveedor, articulo, cantidad, unidad, fechaSolicitud, fechaEntrega, estado, ordenId) VALUES
 ('Repuestos García', 'Sellos hidráulicos kit', 3, 'unidades', '2026-05-22', '2026-05-28', 'en_curso', 2),
 ('Suministros Industriales SA', 'Aceite hidráulico ISO 46', 20, 'litros', '2026-05-20', '2026-05-26', 'recibido', 1),
 ('Herramientas Paz', 'Rodamientos SKF 6205', 6, 'unidades', '2026-05-24', '2026-05-30', 'pendiente', 8),
 ('Filtros del Norte', 'Filtro de aire compresor', 4, 'unidades', '2026-05-18', '2026-05-23', 'recibido', 7),
-('Sensores y Control', 'Sensor de posición inductivo', 2, 'unidades', '2026-05-21', '2026-06-02', 'pendiente', 6);
+('Sensores y Control', 'Sensor de posición inductivo', 2, 'unidades', '2026-05-21', '2026-06-02', 'pendiente', 6),
+('Eléctrica Central', 'Cable THW 10 AWG', 100, 'metros', '2026-05-22', '2026-06-05', 'pendiente', 2),
+('Aceros del Norte', 'Plancha de acero 3/8"', 2, 'planchas', '2026-05-23', '2026-05-30', 'en_curso', NULL),
+('Herramientas Pro', 'Juego de llaves allen', 5, 'juegos', '2026-05-24', NULL, 'pendiente', NULL),
+('Lubricantes Premium', 'Grasa multipropósito', 10, 'kgs', '2026-05-10', '2026-05-14', 'recibido', NULL);
