@@ -1,4 +1,5 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
+import { FiTool } from 'react-icons/fi'
 
 const links = [
   { to: '/', label: 'Dashboard', icon: '📊' },
@@ -13,10 +14,12 @@ const links = [
 export default function Sidebar() {
   return (
     <aside className="w-64 bg-slate-900 text-white flex flex-col shrink-0">
-      <div className="p-5 border-b border-slate-700">
-        <h1 className="text-lg font-bold tracking-tight">Mantenimiento</h1>
-        <p className="text-xs text-slate-400 mt-1">Control de Tareas</p>
-      </div>
+      <Link
+        to="/"
+        className="p-5 border-b border-slate-700 flex items-center justify-center hover:bg-blue-900/30 transition-colors"
+      >
+        <FiTool className="w-8 h-8 text-blue-400" />
+      </Link>
       <nav className="flex-1 p-3 space-y-1">
         {links.map((link) => (
           <NavLink
