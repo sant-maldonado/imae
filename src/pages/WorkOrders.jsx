@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { useOrdenes, useTecnicos } from '../hooks/useMockData'
+import { useOrdenes, useTecnicos, useEquipos } from '../hooks/useMockData'
 import { estados, prioridades } from '../mocks/data'
+import { jsPDF } from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 const priorityColors = {
   urgente: 'bg-red-100 text-red-700 border-red-200',
@@ -25,6 +27,40 @@ export default function WorkOrders() {
 
   const tecnicosMap = {}
   tecnicos?.forEach((t) => { tecnicosMap[t.id] = t.nombre })
+
+  const pendientesTecnico = useMemo(() => {
+    if (!filtroTecnico || !ordenes) return []
+    return ordenes.filter((o) => o.tecnicoId === Number(filtroTecnico) && o.estado === 'pendiente')
+  }, [filtroTecnico, ordenes])
+
+  const generarPDFPendientes = () => {
+    const doc = new jsPDF()
+    const nombreTecnico = tecnicosMap[Number(filtroTecnico)] || 'Técnico'
+
+    doc.setFontSize(18)
+    doc.text('Órdenes Pendientes', 14, 22)
+
+    doc.setFontSize(11)
+    doc.text(`Técnico: ${nombreTecnico}`, 14, 32)
+    doc.text(`Total pendientes: ${pendientesTecnico.length}`, 14, 40)
+
+    autoTable(doc, {
+      startY: 48,
+      head: [['ID', 'Título', 'Prioridad', 'Fecha Prog.', 'Descripción']],
+      body: pendientesTecnico.map((o) => [
+        `#${o.id}`,
+        o.titulo,
+        prioridades[o.prioridad],
+        o.fechaProgramada,
+        o.descripcion.length > 60 ? o.descripcion.slice(0, 60) + '...' : o.descripcion,
+      ]),
+      theme: 'grid',
+      headStyles: { fillColor: [37, 99, 235] },
+      styles: { fontSize: 9 },
+    })
+
+    doc.save(`ordenes_pendientes_${filtroTecnico}.pdf`)
+  }
 
   if (isLoading) return <div className="text-slate-500">Cargando órdenes...</div>
 
@@ -70,12 +106,22 @@ export default function WorkOrders() {
             ))}
           </select>
         </div>
-        <Link
-          to="/ordenes/nueva"
-          className="bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          + Nueva Orden
-        </Link>
+        <div className="flex gap-2">
+          {filtroTecnico && (
+            <button
+              onClick={generarPDFPendientes}
+              className="bg-slate-700 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors flex items-center gap-1.5"
+            >
+              PDF - Pendientes
+            </button>
+          )}
+          <Link
+            to="/ordenes/nueva"
+            className="bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            + Nueva Orden
+          </Link>
+        </div>
       </div>
 
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
