@@ -11,17 +11,22 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) => {
       setUser(session?.user ?? null)
-      if (session?.user) {
-        const { data } = await supabase
-          .from('perfiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single()
-        setPerfil(data)
-      } else {
+      try {
+        if (session?.user) {
+          const { data } = await supabase
+            .from('perfiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single()
+          setPerfil(data)
+        } else {
+          setPerfil(null)
+        }
+      } catch {
         setPerfil(null)
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     })
 
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -33,9 +38,10 @@ export function AuthProvider({ children }) {
           .eq('id', session.user.id)
           .single()
           .then(({ data }) => setPerfil(data))
+          .catch(() => setPerfil(null))
       }
       setLoading(false)
-    })
+    }).catch(() => setLoading(false))
 
     return () => listener?.subscription.unsubscribe()
   }, [])
