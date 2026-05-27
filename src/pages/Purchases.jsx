@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useCompras } from '../hooks/useMockData'
 import { estadosCompra } from '../mocks/data'
 
@@ -21,17 +22,25 @@ export default function Purchases() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <select
-          value={filtroEstado}
-          onChange={(e) => setFiltroEstado(e.target.value)}
-          className="text-sm border border-slate-300 rounded-lg px-3 py-2 bg-white text-slate-700"
+      <div className="flex items-center justify-between">
+        <div className="flex gap-2">
+          <select
+            value={filtroEstado}
+            onChange={(e) => setFiltroEstado(e.target.value)}
+            className="text-sm border border-slate-300 rounded-lg px-3 py-2 bg-white text-slate-700"
+          >
+            <option value="">Todos los estados</option>
+            {Object.entries(estadosCompra).map(([k, v]) => (
+              <option key={k} value={k}>{v}</option>
+            ))}
+          </select>
+        </div>
+        <Link
+          to="/compras/nueva"
+          className="bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
         >
-          <option value="">Todos los estados</option>
-          {Object.entries(estadosCompra).map(([k, v]) => (
-            <option key={k} value={k}>{v}</option>
-          ))}
-        </select>
+          + Nueva Compra
+        </Link>
       </div>
 
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
@@ -46,6 +55,7 @@ export default function Purchases() {
               <th className="text-left px-4 py-3 font-medium text-slate-600">Solicitud</th>
               <th className="text-left px-4 py-3 font-medium text-slate-600">Entrega</th>
               <th className="text-left px-4 py-3 font-medium text-slate-600">Estado</th>
+              <th className="text-left px-4 py-3 font-medium text-slate-600">Acción</th>
             </tr>
           </thead>
           <tbody>
@@ -62,6 +72,11 @@ export default function Purchases() {
                   <span className={`inline-block text-xs font-medium px-2.5 py-1 rounded-full border ${statusColors[compra.estado]}`}>
                     {estadosCompra[compra.estado]}
                   </span>
+                </td>
+                <td className="px-4 py-3">
+                  <Link to={`/compras/${compra.id}`} className="text-blue-600 hover:text-blue-800 text-xs font-medium">
+                    Ver detalle
+                  </Link>
                 </td>
               </tr>
             ))}
