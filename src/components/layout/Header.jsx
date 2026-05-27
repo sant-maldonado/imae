@@ -16,7 +16,7 @@ export default function Header() {
   const title = titles[basePath] || 'Control de Mantenimiento'
 
   return (
-    <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6">
+    <header className="h-16 bg-slate-200 border-b border-slate-300 flex items-center justify-between px-6">
       <h2 className="text-xl font-semibold text-slate-800">{title}</h2>
       <div className="flex items-center gap-3">
         <span className="text-sm text-slate-500">Operador</span>
