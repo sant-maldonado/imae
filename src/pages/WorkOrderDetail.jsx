@@ -1,6 +1,8 @@
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useOrden, useDeleteOrden, useUpdateOrden } from '../hooks/useMockData'
 import { estados, prioridades, tiposMantenimiento } from '../mocks/data'
+import { jsPDF } from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 const priorityColors = {
   urgente: 'bg-red-100 text-red-700 border-red-200',
@@ -30,6 +32,49 @@ export default function WorkOrderDetail() {
       await deleteOrden.mutateAsync(id)
       navigate('/ordenes')
     }
+  }
+
+  const generarPDF = () => {
+    const doc = new jsPDF()
+    const estadoLabel = estados[orden.estado]
+    const prioridadLabel = prioridades[orden.prioridad]
+    const tipoLabel = tiposMantenimiento[orden.tipoMantenimiento]
+
+    doc.setFontSize(18)
+    doc.text('Orden de Trabajo', 14, 22)
+
+    doc.setFontSize(10)
+    doc.text(`N° ${orden.id}`, 14, 30)
+    doc.text(`Fecha de creación: ${orden.fechaCreacion}`, 14, 36)
+
+    doc.setFontSize(12)
+    doc.text('Datos generales', 14, 48)
+
+    autoTable(doc, {
+      startY: 54,
+      body: [
+        ['Título', orden.titulo],
+        ['Estado', estadoLabel],
+        ['Prioridad', prioridadLabel],
+        ['Tipo de mantenimiento', tipoLabel],
+        ['Equipo', orden.equipoNombre],
+        ['Técnico asignado', orden.tecnicoNombre],
+        ['Fecha programada', orden.fechaProgramada],
+        ['Fecha de completación', orden.fechaCompletada || 'Pendiente'],
+      ],
+      theme: 'plain',
+      styles: { fontSize: 10 },
+      columnStyles: { 0: { fontStyle: 'bold', cellWidth: 50 } },
+    })
+
+    doc.setFontSize(12)
+    doc.text('Descripción', 14, doc.lastAutoTable.finalY + 12)
+
+    doc.setFontSize(10)
+    const descLines = doc.splitTextToSize(orden.descripcion, 180)
+    doc.text(descLines, 14, doc.lastAutoTable.finalY + 20)
+
+    doc.save(`orden_trabajo_${orden.id}.pdf`)
   }
 
   const handleCompletar = async () => {
@@ -62,6 +107,12 @@ export default function WorkOrderDetail() {
                 Completar
               </button>
             )}
+            <button
+              onClick={generarPDF}
+              className="bg-blue-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-1"
+            >
+              PDF
+            </button>
             <button
               onClick={handleDelete}
               className="border border-red-300 text-red-600 text-xs font-medium px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors"

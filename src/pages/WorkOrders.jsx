@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useOrdenes } from '../hooks/useMockData'
+import { useOrdenes, useTecnicos } from '../hooks/useMockData'
 import { estados, prioridades } from '../mocks/data'
 
 const priorityColors = {
@@ -18,14 +18,20 @@ const statusColors = {
 
 export default function WorkOrders() {
   const { data: ordenes, isLoading } = useOrdenes()
+  const { data: tecnicos } = useTecnicos()
   const [filtroEstado, setFiltroEstado] = useState('')
   const [filtroPrioridad, setFiltroPrioridad] = useState('')
+  const [filtroTecnico, setFiltroTecnico] = useState('')
+
+  const tecnicosMap = {}
+  tecnicos?.forEach((t) => { tecnicosMap[t.id] = t.nombre })
 
   if (isLoading) return <div className="text-slate-500">Cargando órdenes...</div>
 
   const filtradas = ordenes.filter((o) => {
     if (filtroEstado && o.estado !== filtroEstado) return false
     if (filtroPrioridad && o.prioridad !== filtroPrioridad) return false
+    if (filtroTecnico && o.tecnicoId !== Number(filtroTecnico)) return false
     return true
   })
 
@@ -53,6 +59,16 @@ export default function WorkOrders() {
               <option key={k} value={k}>{v}</option>
             ))}
           </select>
+          <select
+            value={filtroTecnico}
+            onChange={(e) => setFiltroTecnico(e.target.value)}
+            className="text-sm border border-slate-300 rounded-lg px-3 py-2 bg-white text-slate-700"
+          >
+            <option value="">Todos los técnicos</option>
+            {tecnicos?.filter((t) => t.activo).map((t) => (
+              <option key={t.id} value={t.id}>{t.nombre}</option>
+            ))}
+          </select>
         </div>
         <Link
           to="/ordenes/nueva"
@@ -69,6 +85,7 @@ export default function WorkOrders() {
               <th className="text-left px-4 py-3 font-medium text-slate-600">ID</th>
               <th className="text-left px-4 py-3 font-medium text-slate-600">Título</th>
               <th className="text-left px-4 py-3 font-medium text-slate-600">Prioridad</th>
+              <th className="text-left px-4 py-3 font-medium text-slate-600">Técnico</th>
               <th className="text-left px-4 py-3 font-medium text-slate-600">Estado</th>
               <th className="text-left px-4 py-3 font-medium text-slate-600">Programada</th>
               <th className="text-left px-4 py-3 font-medium text-slate-600">Acción</th>
@@ -84,6 +101,7 @@ export default function WorkOrders() {
                     {prioridades[orden.prioridad]}
                   </span>
                 </td>
+                <td className="px-4 py-3 text-slate-600">{tecnicosMap[orden.tecnicoId] || '-'}</td>
                 <td className="px-4 py-3">
                   <span className={`inline-block text-xs font-medium px-2.5 py-1 rounded-full border ${statusColors[orden.estado]}`}>
                     {estados[orden.estado]}
