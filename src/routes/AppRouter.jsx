@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Layout from '../components/layout/Layout'
+import ProtectedRoute from './ProtectedRoute'
+import Login from '../pages/Login'
 import Dashboard from '../pages/Dashboard'
 import WorkOrders from '../pages/WorkOrders'
 import WorkOrderForm from '../pages/WorkOrderForm'
@@ -17,7 +19,14 @@ export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<Layout />}>
+        <Route path="/login" element={<Login />} />
+        <Route
+          element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }
+        >
           <Route path="/" element={<Dashboard />} />
           <Route path="/ordenes" element={<WorkOrders />} />
           <Route path="/ordenes/nueva" element={<WorkOrderForm />} />

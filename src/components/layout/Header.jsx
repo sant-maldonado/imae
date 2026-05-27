@@ -1,4 +1,5 @@
 import { useLocation } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 
 const titles = {
   '/': 'Dashboard',
@@ -14,14 +15,15 @@ export default function Header() {
   const location = useLocation()
   const basePath = '/' + location.pathname.split('/')[1]
   const title = titles[basePath] || 'Control de Mantenimiento'
+  const { perfil } = useAuth()
 
   return (
     <header className="h-16 bg-slate-200 border-b border-slate-300 flex items-center justify-between px-6">
       <h2 className="text-xl font-semibold text-slate-800">{title}</h2>
       <div className="flex items-center gap-3">
-        <span className="text-sm text-slate-500">Operador</span>
+        <span className="text-sm text-slate-500">{perfil?.nombre || 'Usuario'}</span>
         <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-medium">
-          OP
+          {perfil?.nombre?.charAt(0).toUpperCase() || 'U'}
         </div>
       </div>
     </header>

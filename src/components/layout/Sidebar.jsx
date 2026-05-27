@@ -1,5 +1,6 @@
 import { NavLink, Link } from 'react-router-dom'
 import { FiTool } from 'react-icons/fi'
+import { useAuth } from '../../context/AuthContext'
 
 const links = [
   { to: '/', label: 'Dashboard', icon: '📊' },
@@ -12,6 +13,8 @@ const links = [
 ]
 
 export default function Sidebar() {
+  const { perfil, logout } = useAuth()
+
   return (
     <aside className="w-64 bg-slate-900 text-white flex flex-col shrink-0">
       <Link
@@ -39,8 +42,19 @@ export default function Sidebar() {
           </NavLink>
         ))}
       </nav>
-      <div className="p-4 border-t border-slate-700 text-xs text-slate-500">
-        v1.0.0
+      <div className="p-4 border-t border-slate-700 space-y-2">
+        {perfil && (
+          <div className="text-xs text-slate-400">
+            <p className="text-sm text-white font-medium">{perfil.nombre}</p>
+            <p className="capitalize">{perfil.rol}</p>
+          </div>
+        )}
+        <button
+          onClick={logout}
+          className="w-full text-xs text-slate-400 hover:text-white transition-colors text-left"
+        >
+          Cerrar sesión
+        </button>
       </div>
     </aside>
   )

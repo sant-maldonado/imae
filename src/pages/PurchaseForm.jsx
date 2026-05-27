@@ -11,7 +11,6 @@ export default function PurchaseForm() {
     articulo: '',
     cantidad: '',
     unidad: 'unidades',
-    precioUnitario: '',
     fechaEntrega: '',
     estado: 'pendiente',
     ordenId: null,
@@ -22,7 +21,6 @@ export default function PurchaseForm() {
     await createCompra.mutateAsync({
       ...form,
       cantidad: Number(form.cantidad),
-      precioUnitario: Number(form.precioUnitario),
     })
     navigate('/compras')
   }
@@ -54,7 +52,7 @@ export default function PurchaseForm() {
             />
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Cantidad</label>
               <input
@@ -80,17 +78,6 @@ export default function PurchaseForm() {
                 <option value="planchas">Planchas</option>
                 <option value="juegos">Juegos</option>
               </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Precio Unit.</label>
-              <input
-                type="number"
-                required
-                min="1"
-                value={form.precioUnitario}
-                onChange={(e) => setForm({ ...form, precioUnitario: e.target.value })}
-                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
             </div>
           </div>
 

@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom'
 import { useEquipo, useOrdenes } from '../hooks/useMockData'
-import { estados, prioridades } from '../mocks/data'
+import { estados, prioridades } from '../lib/constants'
 
 const estadoColors = {
   operativo: 'bg-emerald-100 text-emerald-700 border-emerald-200',

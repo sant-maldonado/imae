@@ -1,6 +1,6 @@
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useOrden, useDeleteOrden, useUpdateOrden } from '../hooks/useMockData'
-import { estados, prioridades, tiposMantenimiento } from '../mocks/data'
+import { estados, prioridades, tiposMantenimiento } from '../lib/constants'
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 

@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useOrdenes, useTecnicos, useEquipos } from '../hooks/useMockData'
-import { estados, prioridades } from '../mocks/data'
+import { estados, prioridades } from '../lib/constants'
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCompras } from '../hooks/useMockData'
-import { estadosCompra } from '../mocks/data'
+import { estadosCompra } from '../lib/constants'
 
 const statusColors = {
   pendiente: 'bg-amber-50 text-amber-700 border-amber-200',
@@ -51,7 +51,6 @@ export default function Purchases() {
               <th className="text-left px-4 py-3 font-medium text-slate-600">Artículo</th>
               <th className="text-left px-4 py-3 font-medium text-slate-600">Proveedor</th>
               <th className="text-left px-4 py-3 font-medium text-slate-600">Cantidad</th>
-              <th className="text-left px-4 py-3 font-medium text-slate-600">Precio Unit.</th>
               <th className="text-left px-4 py-3 font-medium text-slate-600">Solicitud</th>
               <th className="text-left px-4 py-3 font-medium text-slate-600">Entrega</th>
               <th className="text-left px-4 py-3 font-medium text-slate-600">Estado</th>
@@ -65,7 +64,6 @@ export default function Purchases() {
                 <td className="px-4 py-3 font-medium text-slate-800">{compra.articulo}</td>
                 <td className="px-4 py-3 text-slate-600">{compra.proveedor}</td>
                 <td className="px-4 py-3 text-slate-600">{compra.cantidad} {compra.unidad}</td>
-                <td className="px-4 py-3 text-slate-600">${compra.precioUnitario.toLocaleString()}</td>
                 <td className="px-4 py-3 text-slate-500">{compra.fechaSolicitud}</td>
                 <td className="px-4 py-3 text-slate-500">{compra.fechaEntrega || '-'}</td>
                 <td className="px-4 py-3">

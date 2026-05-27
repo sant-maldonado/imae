@@ -1,6 +1,6 @@
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useCompra, useDeleteCompra } from '../hooks/useMockData'
-import { estadosCompra } from '../mocks/data'
+import { estadosCompra } from '../lib/constants'
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 
@@ -28,7 +28,6 @@ export default function PurchaseDetail() {
 
   const generarPDF = () => {
     const doc = new jsPDF()
-    const total = compra.cantidad * compra.precioUnitario
 
     doc.setFontSize(18)
     doc.text('Orden de Compra', 14, 22)
@@ -49,25 +48,17 @@ export default function PurchaseDetail() {
 
     autoTable(doc, {
       startY: 84,
-      head: [['Cantidad', 'Unidad', 'Precio Unit.', 'Total']],
-      body: [[
-        compra.cantidad,
-        compra.unidad,
-        `$${compra.precioUnitario.toLocaleString()}`,
-        `$${total.toLocaleString()}`,
-      ]],
+      head: [['Cantidad', 'Unidad']],
+      body: [[compra.cantidad, compra.unidad]],
       theme: 'grid',
       headStyles: { fillColor: [37, 99, 235] },
     })
 
-    doc.setFontSize(11)
-    doc.text(`Total: $${total.toLocaleString()}`, 14, doc.lastAutoTable.finalY + 10)
-
     const estado = estadosCompra[compra.estado]
-    doc.text(`Estado: ${estado}`, 14, doc.lastAutoTable.finalY + 18)
+    doc.text(`Estado: ${estado}`, 14, doc.lastAutoTable.finalY + 10)
 
     if (compra.fechaEntrega) {
-      doc.text(`Fecha estimada de entrega: ${compra.fechaEntrega}`, 14, doc.lastAutoTable.finalY + 26)
+      doc.text(`Fecha estimada de entrega: ${compra.fechaEntrega}`, 14, doc.lastAutoTable.finalY + 18)
     }
 
     doc.save(`orden_compra_${compra.id}.pdf`)
@@ -117,16 +108,6 @@ export default function PurchaseDetail() {
           <div>
             <p className="text-slate-500 mb-1">Cantidad</p>
             <p className="font-medium text-slate-700">{compra.cantidad} {compra.unidad}</p>
-          </div>
-          <div>
-            <p className="text-slate-500 mb-1">Precio unitario</p>
-            <p className="font-medium text-slate-700">${compra.precioUnitario.toLocaleString()}</p>
-          </div>
-          <div>
-            <p className="text-slate-500 mb-1">Total</p>
-            <p className="font-medium text-slate-800 text-base">
-              ${(compra.cantidad * compra.precioUnitario).toLocaleString()}
-            </p>
           </div>
           <div>
             <p className="text-slate-500 mb-1">Fecha de entrega</p>
