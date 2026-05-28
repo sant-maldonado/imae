@@ -1,61 +1,35 @@
-import { supabase } from '../lib/supabase'
+import { supabase, camelize } from '../lib/supabase'
+
+async function exec(promise) {
+  const { data, error } = await promise
+  if (error) throw error
+  return camelize(data)
+}
 
 export async function fetchPerfil() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('No autenticado')
-  const { data, error } = await supabase
-    .from('perfiles')
-    .select('*')
-    .eq('id', user.id)
-    .single()
-  if (error) throw error
-  return data
+  return exec(supabase.from('perfiles').select('*').eq('id', user.id).single())
 }
 
 export async function fetchEquipos() {
-  const { data, error } = await supabase
-    .from('equipos')
-    .select('*')
-    .order('id', { ascending: true })
-  if (error) throw error
-  return data
+  return exec(supabase.from('equipos').select('*').order('id', { ascending: true }))
 }
 
 export async function fetchEquipo(id) {
-  const { data, error } = await supabase
-    .from('equipos')
-    .select('*')
-    .eq('id', id)
-    .single()
-  if (error) throw error
-  return data
+  return exec(supabase.from('equipos').select('*').eq('id', id).single())
 }
 
 export async function fetchTecnicos() {
-  const { data, error } = await supabase
-    .from('tecnicos')
-    .select('*')
-    .order('id', { ascending: true })
-  if (error) throw error
-  return data
+  return exec(supabase.from('tecnicos').select('*').order('id', { ascending: true }))
 }
 
 export async function fetchTecnico(id) {
-  const { data, error } = await supabase
-    .from('tecnicos')
-    .select('*')
-    .eq('id', id)
-    .single()
-  if (error) throw error
-  return data
+  return exec(supabase.from('tecnicos').select('*').eq('id', id).single())
 }
 
 export async function fetchOrdenes() {
-  const { data, error } = await supabase
-    .from('ordenes')
-    .select('*, equipos!equipoId(nombre), tecnicos!tecnicoId(nombre)')
-    .order('id', { ascending: false })
-  if (error) throw error
+  const data = await exec(supabase.from('ordenes').select('*, equipos(nombre), tecnicos(nombre)').order('id', { ascending: false }))
   return data.map((o) => ({
     ...o,
     equipoNombre: o.equipos?.nombre,
@@ -64,96 +38,58 @@ export async function fetchOrdenes() {
 }
 
 export async function fetchOrden(id) {
-  const { data, error } = await supabase
-    .from('ordenes')
-    .select('*, equipos!equipoId(nombre), tecnicos!tecnicoId(nombre)')
-    .eq('id', id)
-    .single()
-  if (error) throw error
+  const data = await exec(supabase.from('ordenes').select('*, equipos(nombre), tecnicos(nombre)').eq('id', id).single())
   return { ...data, equipoNombre: data.equipos?.nombre, tecnicoNombre: data.tecnicos?.nombre }
 }
 
 export async function createOrden(data) {
   const { data: { user } } = await supabase.auth.getUser()
-  const { data: result, error } = await supabase
-    .from('ordenes')
-    .insert({ ...data, created_by: user.id })
-    .select()
-    .single()
-  if (error) throw error
-  return result
+  return exec(supabase.from('ordenes').insert({ ...data, created_by: user.id }).select().single())
 }
 
 export async function updateOrden(id, data) {
-  const { error } = await supabase
-    .from('ordenes')
-    .update(data)
-    .eq('id', id)
+  const { error } = await supabase.from('ordenes').update(data).eq('id', id)
   if (error) throw error
   return { id, ...data }
 }
 
 export async function deleteOrden(id) {
-  const { error } = await supabase
-    .from('ordenes')
-    .delete()
-    .eq('id', id)
+  const { error } = await supabase.from('ordenes').delete().eq('id', id)
   if (error) throw error
   return true
 }
 
 export async function fetchCompras() {
-  const { data, error } = await supabase
-    .from('compras')
-    .select('*')
-    .order('id', { ascending: false })
-  if (error) throw error
-  return data
+  return exec(supabase.from('compras').select('*').order('id', { ascending: false }))
 }
 
 export async function fetchCompra(id) {
-  const { data, error } = await supabase
-    .from('compras')
-    .select('*')
-    .eq('id', id)
-    .single()
-  if (error) throw error
-  return data
+  return exec(supabase.from('compras').select('*').eq('id', id).single())
 }
 
 export async function createCompra(data) {
   const { data: { user } } = await supabase.auth.getUser()
-  const { data: result, error } = await supabase
-    .from('compras')
-    .insert({ ...data, created_by: user.id })
-    .select()
-    .single()
-  if (error) throw error
-  return result
+  return exec(supabase.from('compras').insert({ ...data, created_by: user.id }).select().single())
 }
 
 export async function updateCompra(id, data) {
-  const { error } = await supabase
-    .from('compras')
-    .update(data)
-    .eq('id', id)
+  const { error } = await supabase.from('compras').update(data).eq('id', id)
   if (error) throw error
   return { id, ...data }
 }
 
 export async function deleteCompra(id) {
-  const { error } = await supabase
-    .from('compras')
-    .delete()
-    .eq('id', id)
+  const { error } = await supabase.from('compras').delete().eq('id', id)
   if (error) throw error
   return true
 }
 
 export async function fetchDashboardStats() {
-  const { data: ordenes } = await supabase.from('ordenes').select('*')
-  const { data: equipos } = await supabase.from('equipos').select('*')
-  const { data: tecnicos } = await supabase.from('tecnicos').select('*').eq('activo', true)
+  const [ordenes, equipos, tecnicos] = await Promise.all([
+    exec(supabase.from('ordenes').select('*')),
+    exec(supabase.from('equipos').select('*')),
+    exec(supabase.from('tecnicos').select('*').eq('activo', true)),
+  ])
 
   const total = ordenes?.length || 0
   const pendientes = ordenes?.filter((o) => o.estado === 'pendiente').length || 0

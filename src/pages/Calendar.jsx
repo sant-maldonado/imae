@@ -27,6 +27,7 @@ export default function Calendar() {
   }, [ordenes])
 
   if (isLoading) return <div className="text-slate-500">Cargando calendario...</div>
+  if (!ordenes) return <div className="text-red-500">Error al cargar calendario</div>
 
   const celdas = []
   for (let i = 0; i < primerDia; i++) {

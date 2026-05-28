@@ -63,6 +63,7 @@ export default function WorkOrders() {
   }
 
   if (isLoading) return <div className="text-slate-500">Cargando órdenes...</div>
+  if (!ordenes) return <div className="text-red-500">Error al cargar órdenes</div>
 
   const filtradas = ordenes.filter((o) => {
     if (filtroEstado && o.estado !== filtroEstado) return false
@@ -147,7 +148,7 @@ export default function WorkOrders() {
                     {prioridades[orden.prioridad]}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-slate-600">{tecnicosMap[orden.tecnicoId] || '-'}</td>
+                <td className="px-4 py-3 text-slate-600">{orden.tecnicoNombre || '-'}</td>
                 <td className="px-4 py-3">
                   <span className={`inline-block text-xs font-medium px-2.5 py-1 rounded-full border ${statusColors[orden.estado]}`}>
                     {estados[orden.estado]}

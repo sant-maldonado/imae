@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 
+const STORAGE_KEY = 'sb-grrcsarbbvexwdlocnqr-auth-token'
+
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
@@ -9,25 +11,11 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      setUser(session?.user ?? null)
-      try {
-        if (session?.user) {
-          const { data } = await supabase
-            .from('perfiles')
-            .select('*')
-            .eq('id', session.user.id)
-            .single()
-          setPerfil(data)
-        } else {
-          setPerfil(null)
-        }
-      } catch {
-        setPerfil(null)
-      } finally {
-        setLoading(false)
-      }
-    })
+    const safetyTimer = setTimeout(() => {
+      localStorage.removeItem(STORAGE_KEY)
+      localStorage.removeItem(`${STORAGE_KEY}-code-verifier`)
+      setLoading(false)
+    }, 8000)
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
@@ -41,14 +29,25 @@ export function AuthProvider({ children }) {
           .catch(() => setPerfil(null))
       }
       setLoading(false)
-    }).catch(() => setLoading(false))
+      clearTimeout(safetyTimer)
+    }).catch(() => {
+      setLoading(false)
+      clearTimeout(safetyTimer)
+    })
 
-    return () => listener?.subscription.unsubscribe()
+    return () => clearTimeout(safetyTimer)
   }, [])
 
   const login = async (email, password) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
+    setUser(data.user)
+    const { data: perfilData } = await supabase
+      .from('perfiles')
+      .select('*')
+      .eq('id', data.user.id)
+      .single()
+    setPerfil(perfilData)
   }
 
   const register = async (email, password, nombre) => {
@@ -62,6 +61,8 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     await supabase.auth.signOut()
+    setUser(null)
+    setPerfil(null)
   }
 
   return (
