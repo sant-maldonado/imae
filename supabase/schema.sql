@@ -136,14 +136,7 @@ CREATE POLICY tecnicos_delete ON public.tecnicos FOR DELETE USING (
 );
 
 -- ORDENES
-CREATE POLICY ordenes_select ON public.ordenes FOR SELECT USING (
-  auth.role() = 'authenticated'
-  AND (
-    EXISTS (SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND rol IN ('admin', 'supervisor'))
-    OR created_by = auth.uid()
-    OR tecnicoId IN (SELECT id FROM public.tecnicos WHERE nombre IN (SELECT nombre FROM public.perfiles WHERE id = auth.uid()))
-  )
-);
+CREATE POLICY ordenes_select ON public.ordenes FOR SELECT USING (auth.role() = 'authenticated');
 CREATE POLICY ordenes_insert ON public.ordenes FOR INSERT WITH CHECK (
   EXISTS (SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND rol IN ('admin', 'supervisor'))
 );
