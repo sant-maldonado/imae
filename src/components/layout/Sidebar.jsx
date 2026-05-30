@@ -46,10 +46,19 @@ export default function Sidebar({ onClose }) {
       </nav>
       <div className="p-4 border-t border-slate-700 space-y-2">
         {perfil && (
-          <div className="text-xs text-slate-400">
-            <p className="text-sm text-white font-medium">{perfil.nombre}</p>
-            <p className="capitalize">{perfil.rol}</p>
-          </div>
+          <Link to="/perfil" onClick={onClose} className="flex items-center gap-3 hover:bg-slate-800 rounded-lg p-2 -mx-2 transition-colors">
+            {perfil.avatar_url ? (
+              <img src={perfil.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover shrink-0" />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold shrink-0">
+                {perfil.nombre.charAt(0).toUpperCase()}
+              </div>
+            )}
+            <div className="text-xs text-slate-400 min-w-0">
+              <p className="text-sm text-white font-medium truncate">{perfil.nombre}</p>
+              <p className="capitalize">{perfil.rol}</p>
+            </div>
+          </Link>
         )}
         <button
           onClick={() => { logout(); onClose?.() }}

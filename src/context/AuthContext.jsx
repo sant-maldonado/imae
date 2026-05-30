@@ -59,6 +59,16 @@ export function AuthProvider({ children }) {
     if (error) throw error
   }
 
+  const refreshPerfil = async () => {
+    if (!user) return
+    const { data } = await supabase
+      .from('perfiles')
+      .select('*')
+      .eq('id', user.id)
+      .single()
+    setPerfil(data)
+  }
+
   const logout = async () => {
     await supabase.auth.signOut()
     setUser(null)
@@ -66,7 +76,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, perfil, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, perfil, loading, login, register, refreshPerfil, logout }}>
       {children}
     </AuthContext.Provider>
   )

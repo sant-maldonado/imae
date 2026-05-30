@@ -14,6 +14,7 @@ import EquipmentDetail from '../pages/EquipmentDetail'
 import Technicians from '../pages/Technicians'
 import Calendar from '../pages/Calendar'
 import Reports from '../pages/Reports'
+import Profile from '../pages/Profile'
 
 export default function AppRouter() {
   return (
@@ -39,6 +40,7 @@ export default function AppRouter() {
           <Route path="/tecnicos" element={<Technicians />} />
           <Route path="/calendario" element={<Calendar />} />
           <Route path="/reportes" element={<Reports />} />
+          <Route path="/perfil" element={<Profile />} />
         </Route>
       </Routes>
     </BrowserRouter>

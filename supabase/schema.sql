@@ -26,6 +26,25 @@ CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
+-- Avatar de perfil
+ALTER TABLE public.perfiles ADD COLUMN avatar_url TEXT;
+
+-- Bucket para avatares (ejecutar una vez)
+INSERT INTO storage.buckets (id, name, public) VALUES ('avatares', 'avatares', true)
+ON CONFLICT (id) DO NOTHING;
+
+CREATE POLICY avatares_select ON storage.objects FOR SELECT
+  USING (bucket_id = 'avatares' AND auth.role() = 'authenticated');
+
+CREATE POLICY avatares_insert ON storage.objects FOR INSERT
+  WITH CHECK (bucket_id = 'avatares' AND auth.role() = 'authenticated');
+
+CREATE POLICY avatares_update ON storage.objects FOR UPDATE
+  USING (bucket_id = 'avatares' AND auth.role() = 'authenticated');
+
+CREATE POLICY avatares_delete ON storage.objects FOR DELETE
+  USING (bucket_id = 'avatares' AND auth.role() = 'authenticated');
+
 -- 2. TABLAS
 
 CREATE TABLE IF NOT EXISTS public.perfiles (

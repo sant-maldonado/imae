@@ -40,10 +40,14 @@ export default function Dashboard() {
           ))}
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200 p-6 flex flex-col sm:flex-row items-center gap-5">
-          <div className="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl font-bold shrink-0">
-            {inicial}
-          </div>
+        <Link to="/perfil" className="bg-white rounded-xl border border-slate-200 p-6 flex flex-col sm:flex-row items-center gap-5 hover:border-blue-300 transition-colors">
+          {perfil?.avatar_url ? (
+            <img src={perfil.avatar_url} alt="" className="w-16 h-16 rounded-full object-cover shrink-0" />
+          ) : (
+            <div className="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl font-bold shrink-0">
+              {inicial}
+            </div>
+          )}
           <div className="text-center sm:text-left">
             <h2 className="text-lg font-semibold text-slate-800">{nombre}</h2>
             <p className="text-sm text-slate-500">{email}</p>
@@ -51,7 +55,7 @@ export default function Dashboard() {
               {rolLabel[rol] || rol}
             </span>
           </div>
-        </div>
+        </Link>
       </div>
     </div>
   )
