@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 export default function Login() {
-  const { login, register } = useAuth()
+  const { login, register, resetPassword } = useAuth()
   const navigate = useNavigate()
   const [esRegistro, setEsRegistro] = useState(false)
+  const [esReset, setEsReset] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [nombre, setNombre] = useState('')
@@ -17,7 +18,10 @@ export default function Login() {
     setError('')
     setLoading(true)
     try {
-      if (esRegistro) {
+      if (esReset) {
+        await resetPassword(email)
+        setError('Revisá tu email. Te enviamos el link para restablecer la contraseña.')
+      } else if (esRegistro) {
         await register(email, password, nombre)
         setEsRegistro(false)
         setError('Registro exitoso. Revisá tu email para confirmar.')
@@ -50,7 +54,7 @@ export default function Login() {
           </div>
           <h1 className="text-xl font-bold text-white">Control de Mantenimiento</h1>
           <p className="text-sm text-slate-400 mt-1">
-            {esRegistro ? 'Crear cuenta' : 'Iniciar sesión'}
+            {esReset ? 'Restablecer contraseña' : esRegistro ? 'Crear cuenta' : 'Iniciar sesión'}
           </p>
         </div>
 
@@ -78,18 +82,20 @@ export default function Login() {
               placeholder="email@ejemplo.com"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">Contraseña</label>
-            <input
-              type="password"
-              required
-              minLength={6}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2.5 text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="••••••"
-            />
-          </div>
+          {!esReset && (
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-1">Contraseña</label>
+              <input
+                type="password"
+                required
+                minLength={6}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2.5 text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="••••••"
+              />
+            </div>
+          )}
 
           {error && (
             <p className={`text-sm ${error.includes('exitoso') ? 'text-emerald-400' : 'text-red-400'}`}>
@@ -102,16 +108,24 @@ export default function Login() {
             disabled={loading}
             className="w-full bg-blue-600 text-white text-sm font-medium py-2.5 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
           >
-            {loading ? 'Procesando...' : esRegistro ? 'Crear cuenta' : 'Ingresar'}
+            {loading ? 'Procesando...' : esReset ? 'Enviar link' : esRegistro ? 'Crear cuenta' : 'Ingresar'}
           </button>
         </form>
 
-        <div className="mt-4 text-center">
+        <div className="mt-4 flex flex-col items-center gap-2">
+          {!esReset && (
+            <button
+              onClick={() => { setEsReset(true); setEsRegistro(false); setError(''); setPassword('') }}
+              className="text-xs text-slate-400 hover:text-slate-300 transition-colors"
+            >
+              Olvidé mi contraseña
+            </button>
+          )}
           <button
-            onClick={() => { setEsRegistro(!esRegistro); setError('') }}
+            onClick={() => { setEsRegistro(!esRegistro); setEsReset(false); setError(''); setPassword('') }}
             className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
           >
-            {esRegistro ? 'Ya tengo cuenta' : 'Crear cuenta nueva'}
+            {esReset ? 'Volver al inicio' : esRegistro ? 'Ya tengo cuenta' : 'Crear cuenta nueva'}
           </button>
         </div>
       </div>

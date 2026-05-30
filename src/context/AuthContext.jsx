@@ -41,6 +41,10 @@ export function AuthProvider({ children }) {
   const login = async (email, password) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
+    if (!data.user.email_confirmed_at) {
+      await supabase.auth.signOut()
+      throw new Error('Email no confirmado. Revisá tu bandeja de entrada.')
+    }
     setUser(data.user)
     const { data: perfilData } = await supabase
       .from('perfiles')
@@ -69,6 +73,23 @@ export function AuthProvider({ children }) {
     setPerfil(data)
   }
 
+  const changePassword = async (currentPassword, newPassword) => {
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password: currentPassword,
+    })
+    if (signInError) throw new Error('Contraseña actual incorrecta')
+    const { error } = await supabase.auth.updateUser({ password: newPassword })
+    if (error) throw error
+  }
+
+  const resetPassword = async (email) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    })
+    if (error) throw error
+  }
+
   const logout = async () => {
     await supabase.auth.signOut()
     setUser(null)
@@ -76,7 +97,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, perfil, loading, login, register, refreshPerfil, logout }}>
+    <AuthContext.Provider value={{ user, perfil, loading, login, register, refreshPerfil, changePassword, resetPassword, logout }}>
       {children}
     </AuthContext.Provider>
   )

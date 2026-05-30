@@ -15,12 +15,14 @@ import Technicians from '../pages/Technicians'
 import Calendar from '../pages/Calendar'
 import Reports from '../pages/Reports'
 import Profile from '../pages/Profile'
+import ResetPassword from '../pages/ResetPassword'
 
 export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route
           element={
             <ProtectedRoute>

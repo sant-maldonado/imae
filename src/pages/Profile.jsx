@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabase'
+import { HiOutlineLockClosed } from 'react-icons/hi2'
 
 function resizeImage(file, maxSize) {
   return new Promise((resolve) => {
@@ -34,9 +35,16 @@ function resizeImage(file, maxSize) {
 }
 
 export default function Profile() {
-  const { user, perfil, refreshPerfil } = useAuth()
+  const { user, perfil, refreshPerfil, changePassword } = useAuth()
   const fileInputRef = useRef(null)
   const [uploading, setUploading] = useState(false)
+  const [showPassForm, setShowPassForm] = useState(false)
+  const [currentPass, setCurrentPass] = useState('')
+  const [newPass, setNewPass] = useState('')
+  const [confirmPass, setConfirmPass] = useState('')
+  const [passError, setPassError] = useState('')
+  const [passSuccess, setPassSuccess] = useState('')
+  const [passLoading, setPassLoading] = useState(false)
 
   const nombre = perfil?.nombre || user?.email?.split('@')[0] || 'Usuario'
   const email = user?.email || ''
@@ -49,6 +57,33 @@ export default function Profile() {
     supervisor: 'Supervisor',
     tecnico: 'Técnico',
     operador: 'Operador',
+  }
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault()
+    setPassError('')
+    setPassSuccess('')
+    if (newPass !== confirmPass) {
+      setPassError('Las contraseñas no coinciden')
+      return
+    }
+    if (newPass.length < 6) {
+      setPassError('La contraseña debe tener al menos 6 caracteres')
+      return
+    }
+    setPassLoading(true)
+    try {
+      await changePassword(currentPass, newPass)
+      setPassSuccess('Contraseña actualizada')
+      setCurrentPass('')
+      setNewPass('')
+      setConfirmPass('')
+      setShowPassForm(false)
+    } catch (err) {
+      setPassError(err.message)
+    } finally {
+      setPassLoading(false)
+    }
   }
 
   const handleUpload = async (e) => {
@@ -137,6 +172,65 @@ export default function Profile() {
             </span>
           </div>
         </div>
+      </div>
+
+      {/* Change password */}
+      <div className="bg-white rounded-xl border border-slate-200 p-6">
+        <button
+          onClick={() => setShowPassForm(!showPassForm)}
+          className="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors"
+        >
+          <HiOutlineLockClosed className="w-5 h-5" />
+          {showPassForm ? 'Cancelar' : 'Cambiar contraseña'}
+        </button>
+
+        {showPassForm && (
+          <form onSubmit={handleChangePassword} className="mt-4 space-y-3">
+            <div>
+              <label className="block text-xs text-slate-500 mb-0.5">Contraseña actual</label>
+              <input
+                type="password"
+                required
+                value={currentPass}
+                onChange={(e) => setCurrentPass(e.target.value)}
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-slate-500 mb-0.5">Nueva contraseña</label>
+              <input
+                type="password"
+                required
+                minLength={6}
+                value={newPass}
+                onChange={(e) => setNewPass(e.target.value)}
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-slate-500 mb-0.5">Confirmar nueva contraseña</label>
+              <input
+                type="password"
+                required
+                minLength={6}
+                value={confirmPass}
+                onChange={(e) => setConfirmPass(e.target.value)}
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {passError && <p className="text-xs text-red-500">{passError}</p>}
+            {passSuccess && <p className="text-xs text-emerald-600">{passSuccess}</p>}
+
+            <button
+              type="submit"
+              disabled={passLoading}
+              className="bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            >
+              {passLoading ? 'Actualizando...' : 'Actualizar contraseña'}
+            </button>
+          </form>
+        )}
       </div>
     </div>
   )
