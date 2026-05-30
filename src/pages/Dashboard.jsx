@@ -1,79 +1,55 @@
-import { useDashboardStats } from '../hooks/useMockData'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
+import { Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+import { HiOutlineClipboard, HiOutlineCalendar, HiOutlineCog, HiOutlineShoppingBag } from 'react-icons/hi2'
 
-const statusColors = {
-  pendiente: 'bg-amber-500',
-  en_progreso: 'bg-blue-500',
-  completada: 'bg-emerald-500',
-  urgente: 'bg-red-500',
-}
+const quickLinks = [
+  { to: '/ordenes', label: 'Ver Órdenes', icon: HiOutlineClipboard, color: 'bg-blue-600 hover:bg-blue-700' },
+  { to: '/calendario', label: 'Calendario', icon: HiOutlineCalendar, color: 'bg-teal-600 hover:bg-teal-700' },
+  { to: '/equipos', label: 'Equipos', icon: HiOutlineCog, color: 'bg-slate-700 hover:bg-slate-800' },
+  { to: '/compras', label: 'Compras', icon: HiOutlineShoppingBag, color: 'bg-violet-600 hover:bg-violet-700' },
+]
 
 export default function Dashboard() {
-  const { data: stats, isLoading } = useDashboardStats()
+  const { user, perfil } = useAuth()
 
-  if (isLoading) return <div className="text-slate-500">Cargando dashboard...</div>
+  const nombre = perfil?.nombre || user?.email?.split('@')[0] || 'Usuario'
+  const email = user?.email || ''
+  const rol = perfil?.rol || 'tecnico'
+  const inicial = nombre.charAt(0).toUpperCase()
 
-  const kpiCards = [
-    { label: 'Órdenes Pendientes', value: stats.pendientes, color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-200' },
-    { label: 'En Progreso', value: stats.enProgreso, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200' },
-    { label: 'Completadas', value: stats.completadas, color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200' },
-    { label: 'Urgentes', value: stats.urgentes, color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-200' },
-  ]
+  const rolLabel = {
+    admin: 'Administrador',
+    supervisor: 'Supervisor',
+    tecnico: 'Técnico',
+    operador: 'Operador',
+  }
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {kpiCards.map((kpi) => (
-          <div key={kpi.label} className={`rounded-xl border ${kpi.border} ${kpi.bg} p-5`}>
-            <p className="text-sm text-slate-500 mb-1">{kpi.label}</p>
-            <p className={`text-3xl font-bold ${kpi.color}`}>{kpi.value}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200 p-5">
-          <h3 className="text-sm font-semibold text-slate-700 mb-4">Órdenes por Mes</h3>
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={stats.ordenesPorMes}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis dataKey="mes" tick={{ fontSize: 12 }} />
-              <YAxis tick={{ fontSize: 12 }} />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="completadas" name="Completadas" fill="#10b981" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="pendientes" name="Pendientes" fill="#f59e0b" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+    <div className="min-h-full flex flex-col items-center justify-center">
+      <div className="w-full max-w-md space-y-5">
+        <div className="grid grid-cols-2 gap-3">
+          {quickLinks.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className={`${link.color} text-white rounded-xl p-4 flex flex-col items-center justify-center gap-2 transition-colors min-h-[90px]`}
+            >
+              <link.icon className="w-7 h-7" />
+              <span className="text-sm font-medium">{link.label}</span>
+            </Link>
+          ))}
         </div>
 
-        <div className="space-y-4">
-          <div className="bg-white rounded-xl border border-slate-200 p-5">
-            <h3 className="text-sm font-semibold text-slate-700 mb-3">Equipos</h3>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-500">Operativos</span>
-                <span className="text-lg font-semibold text-emerald-600">{stats.equiposOperativos}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-500">Averiados</span>
-                <span className="text-lg font-semibold text-red-600">{stats.equiposAveriados}</span>
-              </div>
-              <div className="flex justify-between items-center pt-2 border-t border-slate-100">
-                <span className="text-sm font-medium text-slate-600">Total</span>
-                <span className="text-lg font-semibold text-slate-800">{stats.totalEquipos}</span>
-              </div>
-            </div>
+        <div className="bg-white rounded-xl border border-slate-200 p-6 flex flex-col sm:flex-row items-center gap-5">
+          <div className="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl font-bold shrink-0">
+            {inicial}
           </div>
-
-          <div className="bg-white rounded-xl border border-slate-200 p-5">
-            <h3 className="text-sm font-semibold text-slate-700 mb-3">Técnicos Activos</h3>
-            <p className="text-3xl font-bold text-blue-600">{stats.totalTecnicos}</p>
-          </div>
-
-          <div className="bg-white rounded-xl border border-slate-200 p-5">
-            <h3 className="text-sm font-semibold text-slate-700 mb-3">Total Órdenes</h3>
-            <p className="text-3xl font-bold text-slate-800">{stats.total}</p>
+          <div className="text-center sm:text-left">
+            <h2 className="text-lg font-semibold text-slate-800">{nombre}</h2>
+            <p className="text-sm text-slate-500">{email}</p>
+            <span className="inline-block mt-1 text-xs font-medium bg-blue-100 text-blue-700 px-2.5 py-0.5 rounded-full">
+              {rolLabel[rol] || rol}
+            </span>
           </div>
         </div>
       </div>
