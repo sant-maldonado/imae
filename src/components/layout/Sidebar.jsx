@@ -12,13 +12,14 @@ const links = [
   { to: '/reportes', label: 'Reportes', icon: '📈' },
 ]
 
-export default function Sidebar() {
+export default function Sidebar({ onClose }) {
   const { perfil, logout } = useAuth()
 
   return (
-    <aside className="w-64 bg-slate-900 text-white flex flex-col shrink-0">
+    <aside className="w-64 bg-slate-900 text-white flex flex-col h-full">
       <Link
         to="/"
+        onClick={onClose}
         className="p-5 border-b border-slate-700 flex items-center justify-center hover:bg-blue-900/30 transition-colors"
       >
         <FiTool className="w-8 h-8 text-blue-400" />
@@ -29,6 +30,7 @@ export default function Sidebar() {
             key={link.to}
             to={link.to}
             end={link.to === '/'}
+            onClick={onClose}
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 isActive
@@ -50,7 +52,7 @@ export default function Sidebar() {
           </div>
         )}
         <button
-          onClick={logout}
+          onClick={() => { logout(); onClose?.() }}
           className="w-full text-xs text-slate-400 hover:text-white transition-colors text-left"
         >
           Cerrar sesión

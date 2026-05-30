@@ -32,18 +32,18 @@ export default function EquipmentDetail() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-xl border border-slate-200 p-6">
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <h3 className="text-xl font-semibold text-slate-800">{equipo.nombre}</h3>
+      <div className="bg-white rounded-xl border border-slate-200 p-4 md:p-6">
+        <div className="flex flex-col sm:flex-row items-start gap-3 mb-4">
+          <div className="flex-1">
+            <h3 className="text-lg md:text-xl font-semibold text-slate-800">{equipo.nombre}</h3>
             <p className="text-sm text-slate-500 mt-1">{equipo.codigo}</p>
           </div>
-          <span className={`text-xs font-medium px-2.5 py-1 rounded-full border ${estadoColors[equipo.estado]}`}>
+          <span className={`text-xs font-medium px-2.5 py-1 rounded-full border shrink-0 ${estadoColors[equipo.estado]}`}>
             {estadoLabels[equipo.estado]}
           </span>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 text-sm">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
             <p className="text-slate-500">Ubicación</p>
             <p className="font-medium text-slate-700 mt-1">{equipo.ubicacion}</p>
@@ -69,13 +69,13 @@ export default function EquipmentDetail() {
               <Link
                 key={orden.id}
                 to={`/ordenes/${orden.id}`}
-                className="flex items-center justify-between p-3 rounded-lg border border-slate-100 hover:bg-slate-50 transition-colors"
+                className="flex items-center justify-between gap-2 p-3 rounded-lg border border-slate-100 hover:bg-slate-50 transition-colors"
               >
-                <div>
-                  <p className="text-sm font-medium text-slate-700">{orden.titulo}</p>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-slate-700 truncate">{orden.titulo}</p>
                   <p className="text-xs text-slate-400 mt-0.5">{orden.fechaProgramada}</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-1.5 shrink-0">
                   <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${statusColors[orden.estado]}`}>
                     {estados[orden.estado]}
                   </span>

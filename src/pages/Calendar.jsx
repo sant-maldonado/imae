@@ -31,7 +31,7 @@ export default function Calendar() {
 
   const celdas = []
   for (let i = 0; i < primerDia; i++) {
-    celdas.push(<div key={`empty-${i}`} className="min-h-[100px]" />)
+    celdas.push(<div key={`empty-${i}`} className="min-h-[56px] md:min-h-[100px]" />)
   }
   for (let dia = 1; dia <= diasEnMes; dia++) {
     const fechaStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`
@@ -41,9 +41,9 @@ export default function Calendar() {
     celdas.push(
       <div
         key={dia}
-        className={`min-h-[100px] p-1.5 border border-slate-100 rounded-lg ${esHoy ? 'bg-blue-50 ring-2 ring-blue-400' : ''}`}
+        className={`min-h-[56px] md:min-h-[100px] p-1 md:p-1.5 border border-slate-100 rounded-lg ${esHoy ? 'bg-blue-50 ring-2 ring-blue-400' : ''}`}
       >
-        <span className={`text-xs font-medium ${esHoy ? 'text-blue-700' : 'text-slate-500'}`}>{dia}</span>
+        <span className={`text-[11px] md:text-xs font-medium ${esHoy ? 'text-blue-700' : 'text-slate-500'}`}>{dia}</span>
         <div className="mt-1 space-y-1">
           {ordenesDelDia.slice(0, 3).map((o) => (
             <Link
@@ -69,7 +69,7 @@ export default function Calendar() {
   return (
     <div>
       <div className="mb-4">
-        <h3 className="text-lg font-semibold text-slate-800">{meses[month]} {year}</h3>
+        <h3 className="text-base md:text-lg font-semibold text-slate-800">{meses[month]} {year}</h3>
       </div>
       <div className="grid grid-cols-7 gap-1">
         {diasSemana.map((d) => (

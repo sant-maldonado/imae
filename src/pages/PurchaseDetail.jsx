@@ -72,13 +72,13 @@ export default function PurchaseDetail() {
         <span className="text-slate-800">#{compra.id}</span>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 p-6">
-        <div className="flex items-start justify-between mb-6">
-          <div>
-            <h3 className="text-xl font-semibold text-slate-800">{compra.articulo}</h3>
+      <div className="bg-white rounded-xl border border-slate-200 p-4 md:p-6">
+        <div className="flex flex-col sm:flex-row items-start gap-3 mb-6">
+          <div className="flex-1">
+            <h3 className="text-lg md:text-xl font-semibold text-slate-800">{compra.articulo}</h3>
             <p className="text-sm text-slate-500 mt-1">Solicitada el {compra.fechaSolicitud}</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2 shrink-0">
             <button
               onClick={generarPDF}
               className="bg-blue-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-1"
@@ -94,7 +94,7 @@ export default function PurchaseDetail() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 text-sm">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
             <p className="text-slate-500 mb-1">Estado</p>
             <span className={`inline-block text-xs font-medium px-2.5 py-1 rounded-full border ${statusColors[compra.estado]}`}>
