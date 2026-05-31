@@ -31,7 +31,7 @@ export default function Calendar() {
 
   const celdas = []
   for (let i = 0; i < primerDia; i++) {
-    celdas.push(<div key={`empty-${i}`} className="min-h-[56px] md:min-h-[100px]" />)
+    celdas.push(<div key={`empty-${i}`} className="min-h-0" />)
   }
   for (let dia = 1; dia <= diasEnMes; dia++) {
     const fechaStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`
@@ -41,7 +41,7 @@ export default function Calendar() {
     celdas.push(
       <div
         key={dia}
-        className={`min-h-[56px] md:min-h-[100px] p-1 md:p-1.5 border border-slate-100 rounded-lg ${esHoy ? 'bg-blue-50 ring-2 ring-blue-400' : ''}`}
+        className={`min-h-0 overflow-hidden p-1 md:p-1.5 border border-slate-100 rounded-lg ${esHoy ? 'bg-blue-50 ring-2 ring-blue-400' : ''}`}
       >
         <span className={`text-[11px] md:text-xs font-medium ${esHoy ? 'text-blue-700' : 'text-slate-500'}`}>{dia}</span>
         <div className="mt-1 space-y-1">
@@ -67,13 +67,13 @@ export default function Calendar() {
   }
 
   return (
-    <div>
+    <div className="h-full flex flex-col">
       <div className="mb-4">
         <h3 className="text-base md:text-lg font-semibold text-slate-800">{meses[month]} {year}</h3>
       </div>
-      <div className="grid grid-cols-7 gap-1">
+      <div className="flex-1 grid grid-cols-7 grid-rows-[auto_repeat(6,1fr)] gap-1">
         {diasSemana.map((d) => (
-          <div key={d} className="text-center text-xs font-medium text-slate-500 py-2">{d}</div>
+          <div key={d} className="text-center text-xs font-medium text-slate-500 flex items-center justify-center">{d}</div>
         ))}
         {celdas}
       </div>
