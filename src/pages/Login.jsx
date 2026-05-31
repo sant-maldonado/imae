@@ -24,7 +24,7 @@ export default function Login() {
       } else if (esRegistro) {
         await register(email, password, nombre)
         setEsRegistro(false)
-        setError('Registro exitoso. Revisá tu email para confirmar.')
+        setError('Registro exitoso. Ya podés iniciar sesión.')
       } else {
         await login(email, password)
         navigate('/')

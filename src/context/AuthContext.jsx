@@ -41,10 +41,6 @@ export function AuthProvider({ children }) {
   const login = async (email, password) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
-    if (!data.user.email_confirmed_at) {
-      await supabase.auth.signOut()
-      throw new Error('Email no confirmado. Revisá tu bandeja de entrada.')
-    }
     setUser(data.user)
     const { data: perfilData } = await supabase
       .from('perfiles')
