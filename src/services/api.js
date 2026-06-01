@@ -21,7 +21,13 @@ export async function fetchEquipo(id) {
 }
 
 export async function fetchTecnicos() {
-  return exec(supabase.from('tecnicos').select('*').order('id', { ascending: true }))
+  const data = await exec(
+    supabase.from('tecnicos').select('*, perfiles!created_by(avatar_url)').order('id', { ascending: true })
+  )
+  return data.map((t) => ({
+    ...t,
+    avatarUrl: t.perfiles?.avatarUrl || null,
+  }))
 }
 
 export async function fetchTecnico(id) {
