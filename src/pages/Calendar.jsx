@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useOrdenes } from '../hooks/useMockData'
-import { estados, prioridades } from '../lib/constants'
 
 const diasSemana = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
 const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
@@ -65,16 +64,21 @@ export default function Calendar() {
       </div>
     )
   }
+  for (let i = primerDia + diasEnMes; i < 42; i++) {
+    celdas.push(<div key={`pad-${i}`} className="min-h-0" />)
+  }
 
   return (
     <div className="h-full flex flex-col">
       <div className="mb-4">
         <h3 className="text-base md:text-lg font-semibold text-slate-800">{meses[month]} {year}</h3>
       </div>
-      <div className="flex-1 grid grid-cols-7 grid-rows-[auto_repeat(6,1fr)] gap-1">
+      <div className="grid grid-cols-7 gap-1 mb-1 shrink-0">
         {diasSemana.map((d) => (
-          <div key={d} className="text-center text-xs font-medium text-slate-500 flex items-center justify-center">{d}</div>
+          <div key={d} className="text-center text-xs font-medium text-slate-500">{d}</div>
         ))}
+      </div>
+      <div className="flex-1 grid grid-cols-7 grid-rows-6 gap-1 min-h-0">
         {celdas}
       </div>
     </div>
