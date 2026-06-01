@@ -144,9 +144,7 @@ CREATE POLICY equipos_delete ON public.equipos FOR DELETE USING (
 
 -- TECNICOS
 CREATE POLICY tecnicos_select ON public.tecnicos FOR SELECT USING (auth.role() = 'authenticated');
-CREATE POLICY tecnicos_insert ON public.tecnicos FOR INSERT WITH CHECK (
-  EXISTS (SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND rol IN ('admin', 'supervisor'))
-);
+CREATE POLICY tecnicos_insert ON public.tecnicos FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 CREATE POLICY tecnicos_update ON public.tecnicos FOR UPDATE USING (
   EXISTS (SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND rol IN ('admin', 'supervisor'))
 );
