@@ -50,13 +50,20 @@ export function AuthProvider({ children }) {
     setPerfil(perfilData)
   }
 
-  const register = async (email, password, nombre) => {
-    const { error } = await supabase.auth.signUp({
+  const register = async (email, password, nombre, especialidad, telefono) => {
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: { data: { nombre } },
     })
     if (error) throw error
+    await supabase.from('tecnicos').insert({
+      nombre,
+      email,
+      especialidad: especialidad || null,
+      telefono: telefono || null,
+      created_by: data.user.id,
+    })
   }
 
   const refreshPerfil = async () => {

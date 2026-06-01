@@ -10,6 +10,8 @@ export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [nombre, setNombre] = useState('')
+  const [especialidad, setEspecialidad] = useState('')
+  const [telefono, setTelefono] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -22,7 +24,7 @@ export default function Login() {
         await resetPassword(email)
         setError('Revisá tu email. Te enviamos el link para restablecer la contraseña.')
       } else if (esRegistro) {
-        await register(email, password, nombre)
+        await register(email, password, nombre, especialidad, telefono)
         setEsRegistro(false)
         setError('Registro exitoso. Ya podés iniciar sesión.')
       } else {
@@ -60,16 +62,45 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className="space-y-4">
           {esRegistro && (
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">Nombre</label>
-              <input
-                required
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-                className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2.5 text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Tu nombre"
-              />
-            </div>
+            <>
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Nombre</label>
+                <input
+                  required
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                  className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2.5 text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Tu nombre"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Especialidad</label>
+                <select
+                  required
+                  value={especialidad}
+                  onChange={(e) => setEspecialidad(e.target.value)}
+                  className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="" disabled>Seleccionar especialidad</option>
+                  <option value="Mecánica">Mecánica</option>
+                  <option value="Eléctrica">Eléctrica</option>
+                  <option value="Electrónica">Electrónica</option>
+                  <option value="Hidráulica">Hidráulica</option>
+                  <option value="Neumática">Neumática</option>
+                  <option value="Instrumentación">Instrumentación</option>
+                  <option value="General">General</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Teléfono</label>
+                <input
+                  value={telefono}
+                  onChange={(e) => setTelefono(e.target.value)}
+                  className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2.5 text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="+54 11 5555-5555"
+                />
+              </div>
+            </>
           )}
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-1">Email</label>
